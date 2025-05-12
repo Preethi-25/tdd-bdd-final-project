@@ -94,21 +94,22 @@ def create_products():
     return jsonify(message), status.HTTP_201_CREATED, {"Location": location_url}
 
 
-######################################################################
-# L I S T   A L L   P R O D U C T S
-######################################################################
 
-#
-# PLACE YOUR CODE TO LIST ALL PRODUCTS HERE
-#
+@app.route("/products/<int:product_id>", methods=["GET"])
+def get_products(product_id):
+    """
+    Retrieve a single Product
 
-######################################################################
-# R E A D   A   P R O D U C T
-######################################################################
+    This endpoint will return a Product based on it's id
+    """
+    app.logger.info("Request to Retrieve a product with id [%s]", product_id)
 
-#
-# PLACE YOUR CODE HERE TO READ A PRODUCT
-#
+    product = Product.find(product_id)
+    if not product:
+        abort(status.HTTP_404_NOT_FOUND, f"Product with id '{product_id}' was not found.")
+
+    app.logger.info("Returning product: %s", product.name)
+    return product.serialize(), status.HTTP_200_OK
 
 ######################################################################
 # U P D A T E   A   P R O D U C T
